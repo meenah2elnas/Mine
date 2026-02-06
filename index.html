@@ -1,33 +1,146 @@
-<style>
-    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .photo-grid img { width: 100%; border-radius: 10px; border: 2px solid var(--dark-pink); }
-    .appreciation-list { text-align: left; font-size: 14px; color: var(--ash); }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Tribute to My Man</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { 
+            --gold: #d4af37; 
+            --dark-pink: #ad1457; 
+            --ash: #2c2c2c; 
+            --soft-pink: #fce4ec; 
+        }
+        body { 
+            background: var(--ash); 
+            color: white; 
+            font-family: 'Georgia', serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            overflow-x: hidden;
+        }
+        #game-container { 
+            background: white; 
+            color: #333; 
+            padding: 50px; 
+            border-radius: 15px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); 
+            max-width: 600px; 
+            width: 90%; 
+            text-align: center; 
+            border: 2px solid var(--gold);
+        }
+        h1 { font-family: 'Playfair Display', serif; color: var(--dark-pink); letter-spacing: 2px; }
+        .btn { 
+            background: var(--ash); 
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 15px 40px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            transition: 0.5s; 
+        }
+        .btn:hover { background: var(--gold); color: white; }
+        .hidden { display: none; }
+        .photo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; 
+            margin: 30px 0; 
+        }
+        .photo-grid img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-radius: 5px; 
+            filter: grayscale(30%); 
+            transition: 0.5s;
+        }
+        .photo-grid img:hover { filter: grayscale(0%); transform: scale(1.05); }
+        .letter-text { 
+            text-align: left; 
+            line-height: 1.8; 
+            font-size: 18px; 
+            border-top: 1px solid #eee; 
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
 
-<div id="stage4" class="hidden">
-    <h1>To the Man of My Life ❤️</h1>
-    
-    <div class="letter-content">
-        <p><strong>Mon Chéri,</strong></p>
-        <p>This isn't just a letter; it's a reminder of how incredible you are. I watched you this year [mention a struggle he overcame or a win], and I was so proud to call you mine.</p>
-        <p>You are the most hardworking, handsome, and patient man I know. Whether you're riding horses or we're sharing a bowl of spaghetti, every moment with you is my favorite.</p>
-        <p><strong>Tu es l'homme de mes rêves (the man of my dreams).</strong></p>
+<div id="game-container">
+    <div id="stage-intro">
+        <p style="letter-spacing: 5px; color: var(--gold);">VALENTINE 2026</p>
+        <h1>THE MAN OF THE YEAR</h1>
+        <p>This is a digital tribute to the strength, the grace, and the heart of the man I love.</p>
+        <button class="btn" onclick="startApp()">Enter Experience</button>
     </div>
 
-    <h3>📸 Our Highlights</h3>
-    <div class="photo-grid">
-        <img src="photo1.jpg" alt="You looking handsome">
-        <img src="photo2.jpg" alt="My favorite memory">
+    <div id="stage-quiz" class="hidden">
+        <h2 id="q-title">The Hero's Test</h2>
+        <p id="q-text">Which of your many goals are you most proud of crushing this year?</p>
+        <input type="text" id="q-input" style="width: 80%; padding: 10px; margin-bottom: 20px;" placeholder="Write it here...">
+        <br>
+        <button class="btn" onclick="nextQuestion()">Next Achievement</button>
     </div>
 
-    <p style="margin-top:15px;"><strong>Yours always, ASB</strong></p>
+    <div id="stage-final" class="hidden">
+        <h1 style="font-size: 40px;">MA CHÉRIE,</h1>
+        
+        <div class="photo-grid">
+            <img src="him1.jpg" alt="Him 1">
+            <img src="him2.jpg" alt="Him 2">
+            <img src="him3.jpg" alt="Him 3">
+            <img src="him4.jpg" alt="Him 4">
+        </div>
+
+        <div class="letter-text">
+            <p>I didn't know what to get you. So I built something.I know its not that grand so manage</p>
+            <p>"I could write a thousand lines and still not capture you perfectly. I admire your work ethic more than you know, even if I’m already planning on 'stealing' you away from your desk more often once we’re married. You have this way of lighting up a room just by existing, but it’s your smile that gets me every time. The way your dimples show up is my favorite little secret. You are my strength, my peace, and my favorite person to dream with. You are <strong>intentional</strong>, you are <strong>powerful</strong>, and you are <strong>enough</strong>.</p>
+            <p>You aren't just my partner; you are the man I admire most. You are MINE and I'm yours...Fid duniya wal ahkirah...IN SHA ALLAH</p>
+            <p style="text-align: right; color: var(--dark-pink); font-weight: bold;">
+                Forever yours,<br>HD
+            </p>
+        </div>
+        <p>🐎🍝💎</p>
+    </div>
 </div>
 
 <script>
-    const quizData = [
-        { q: "What was the biggest goal you smashed this year?", a: "" }, // These can be "free" points or specific to his wins
-        { q: "What is your favorite way to spend a Sunday?", a: "horses" },
-        { q: "Which shirt of yours is my absolute favorite on you?", a: "black" },
-        // ... (Update the rest to be about HIS life and HIS favorites)
+    function startApp() {
+        document.getElementById('stage-intro').classList.add('hidden');
+        document.getElementById('stage-quiz').classList.remove('hidden');
+    }
+
+    let qCount = 0;
+    const questions = [
+        "What is the biggest win you've had recently?",
+        "How excited are you about our wedding?",
+        "What is one thing you want us to achieve together this year?",
+        "Why do you think we make such a powerful team?"
     ];
+
+    function nextQuestion() {
+        if (qCount < questions.length - 1) {
+            qCount++;
+            document.getElementById('q-text').innerText = questions[qCount];
+            document.getElementById('q-input').value = "";
+        } else {
+            showGrandFinale();
+        }
+    }
+
+    function showGrandFinale() {
+        confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 }, colors: ['#d4af37', '#ad1457', '#ffffff'] });
+        document.getElementById('stage-quiz').classList.add('hidden');
+        document.getElementById('stage-final').classList.remove('hidden');
+    }
 </script>
+</body>
+</html>
