@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The ASB Challenge | Valentine's 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --light-pink: #fce4ec; --dark-pink: #d81b60; --ash: #757575; --text-gray: #4a4a4a; }
+        body { background-color: var(--light-pink); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; color: var(--text-gray); }
+        #game-container { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; max-width: 450px; width: 90%; border: 4px solid var(--dark-pink); position: relative; }
+        h1 { color: var(--dark-pink); font-size: 22px; }
+        .btn { background-color: var(--dark-pink); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-size: 15px; font-weight: bold; margin: 5px; }
+        .hidden { display: none; }
+        .horse-track { background: #eee; border-radius: 10px; height: 40px; width: 100%; margin: 15px 0; position: relative; }
+        #horse { position: absolute; left: 0; font-size: 25px; cursor: pointer; line-height: 40px; transition: 0.2s; }
+        input { padding: 10px; border-radius: 10px; border: 2px solid #ddd; width: 80%; margin-bottom: 10px; }
+        .score-board { font-weight: bold; color: var(--dark-pink); font-size: 18px; margin-bottom: 10px; }
+        .letter-content { text-align: left; background: #fafafa; padding: 20px; border-radius: 15px; border-left: 5px solid var(--dark-pink); font-size: 14px; max-height: 250px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="stage1">
+        <h1>🏇 Gallop to My Heart</h1>
+        <p>Tap the horse to race to your Baby Girl!</p>
+        <div class="horse-track"><div id="horse" onclick="moveHorse()">🐎</div></div>
+    </div>
+
+    <div id="stage2" class="hidden">
+        <h1>🧠 How Well Do You Know Me?</h1>
+        <div class="score-board">Score: <span id="current-score">0</span>/10</div>
+        <p id="question-text"></p>
+        <input type="text" id="quiz-input" placeholder="Your answer...">
+        <br>
+        <button class="btn" onclick="submitAnswer()">Next Question</button>
+    </div>
+
+    <div id="stage3" class="hidden">
+        <h1 id="result-title">Calculating...</h1>
+        <div id="heart-reward" style="font-size: 80px;" class="hidden">💖</div>
+        <p id="result-text"></p>
+        <button id="final-btn" class="btn hidden" onclick="showLetter()">Open My Letter</button>
+        <button id="retry-btn" class="btn hidden" onclick="location.reload()">Try Again</button>
+    </div>
+
+    <div id="stage4" class="hidden">
+        <h1>Access Granted ❤️</h1>
+        <div class="letter-content">
+            <p><strong>Superman,</strong></p>
+            <p>I sat down to write this because sometimes saying "I love you" doesn't feel like it carries enough weight. <strong>Tu es la femme de ma vie.</strong></p>
+            <p>You are my home, my peace, and my favorite person to share a bowl of spaghetti with coz its ya favorite. I promise to keep choosing you every single day.</p>
+            <p><strong>Je t'aime plus que tout au monde.</strong></p>
+            <p style="text-align: right;"><strong>Yours always, HD</strong></p>
+        </div>
+        <p>🐎🍝❤️</p>
+    </div>
+</div>
+
+<script>
+    // --- CHANGE THE ANSWERS BELOW ---
+    const quizData = [
+        { q: "What is my absolute favorite color?", a: "blue" },
+        { q: "What is the one snack I could eat every day? ", a: "cake" },
+        { q: "What is the special nickname I have for you?", a: "mine" },
+        { q: "Am I an early bird or a night owl?", a: "night owl" },
+        { q: "Which month is my birthday?", a: "september" },
+        { q: "What is my favorite flower?", a: "rose" },
+        { q: "Where was the very first place we met?", a: "atbu gubi" },
+        { q: "What is my favourite feature about you?", a: "dimples" },
+        { q: "How exicted am i for our wedding on a scale of 0-100?", a: "85" },
+        { q: "Do I love you more than anything?", a: "maybe" }
+    ];
+
+    let horsePos = 0; let currentQ = 0; let score = 0;
+    function moveHorse() {
+        horsePos += 15;
+        document.getElementById('horse').style.left = horsePos + '%';
+        if(horsePos >= 90) {
+            document.getElementById('stage1').classList.add('hidden');
+            document.getElementById('stage2').classList.remove('hidden');
+            loadQuestion();
+        }
+    }
+    function loadQuestion() {
+        document.getElementById('question-text').innerText = quizData[currentQ].q;
+        document.getElementById('quiz-input').value = "";
+    }
+    function submitAnswer() {
+        let userAns = document.getElementById('quiz-input').value.toLowerCase().trim();
+        if(userAns.includes(quizData[currentQ].a)) { score++; document.getElementById('current-score').innerText = score; }
+        currentQ++;
+        if(currentQ < quizData.length) { loadQuestion(); } else { showResult(); }
+    }
+    function showResult() {
+        document.getElementById('stage2').classList.add('hidden');
+        document.getElementById('stage3').classList.remove('hidden');
+        if(score >= 8) {
+            document.getElementById('result-title').innerText = "You Passed! 🎉";
+            document.getElementById('result-text').innerText = "You scored " + score + "/10. You really know me! Here is your reward:";
+            document.getElementById('heart-reward').classList.remove('hidden');
+            document.getElementById('final-btn').classList.remove('hidden');
+            confetti({ particleCount: 150, spread: 70 });
+        } else {
+            document.getElementById('result-title').innerText = "Try Again! 😅";
+            document.getElementById('result-text').innerText = "Score: " + score + "/10. A true cowboy knows his horse better! Try again to unlock the letter.";
+            document.getElementById('retry-btn').classList.remove('hidden');
+        }
+    }
+    function showLetter() { document.getElementById('stage3').classList.add('hidden'); document.getElementById('stage4').classList.remove('hidden'); }
+</script>
+</body>
+</html>
